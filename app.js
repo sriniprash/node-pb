@@ -2,9 +2,11 @@
 
 let express = require('express');
 let morgan = require('morgan');
-let store = require('./lib/fileStore');
 let app = express();
 const appConfig = require('./config');
+
+let storeType = process.env.STORE_TYPE || "fileStore";
+let store = require('./lib/' + storeType);
 let storeObject = new store(appConfig);
 
 // Middleware for logging requests
@@ -42,8 +44,8 @@ app.post('/', function (req, res) {
   let promise = storeObject.put(paste);
 
   promise.then(
-    function(result) {
-      res.send(result);
+    function(md5sum) {
+      res.send("Paste Created with ID: " + md5sum);
     },
     function(error) {
       res.status(500).send(error);
@@ -52,5 +54,5 @@ app.post('/', function (req, res) {
 });
 
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+  console.log('Node-pb app listening on port 3000!');
 });
