@@ -5,7 +5,7 @@ let morgan = require('morgan');
 let app = express();
 const appConfig = require('./config');
 
-let storeType = process.env.STORE_TYPE || "fileStore";
+let storeType = process.env.STORE_TYPE || "FileStore";
 let store = require('./lib/' + storeType);
 let storeObject = new store(appConfig);
 

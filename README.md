@@ -15,7 +15,7 @@ npm install
 
 The configuration values can be tweaked in the config.js file.
 
-Sample configuration for fileStore as backend storage:
+Sample configuration for FileStore as backend storage:
 
 ```
 let appConfig = {
@@ -23,7 +23,7 @@ let appConfig = {
 };
 ```
 
-Sample Configuration for redisStore as backed storage:
+Sample Configuration for RedisStore as backed storage:
 
 ```
 let appConfig = {
@@ -33,17 +33,21 @@ let appConfig = {
 };
 ```
 
-For redisStore, the config values confirm to: http://redis.js.org/#api-rediscreateclient
+For RedisStore, the config values confirm to: http://redis.js.org/#api-rediscreateclient
 
 ### Starting the server
 
 ```
-STORE_TYPE=redisStore node app.js #This should start the server at port 3000 with redis as the backend store.
+cd node-pb
 
-STORE_TYPE=fileStore node app.js #This should start the server at port 3000 with filesystem as the backend store.
+#To start the server at port 3000 with redis as the backend store.
+STORE_TYPE=RedisStore npm start
+
+#To start the server at port 3000 with filesystem as the backend store.
+STORE_TYPE=FileStore npm start
 ```
 
-If STORE_TYPE is not specified, then the app defaults to "fileStore".
+If STORE_TYPE is not specified, then the app defaults to "FileStore".
 
 ## Usage:
 
