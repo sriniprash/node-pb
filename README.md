@@ -7,10 +7,11 @@ A minimalist PasteBin server in NodeJS.
 
 ```
 git clone git@github.com:sriniprash/node-pb.git
+cd node-pb
 npm install
 ```
 
-###Configuration
+### Configuration
 
 The configuration values can be tweaked in the config.js file.
 
@@ -33,6 +34,8 @@ let appConfig = {
 ```
 
 For redisStore, the config values confirm to: http://redis.js.org/#api-rediscreateclient
+
+### Starting the server
 
 ```
 STORE_TYPE=redisStore node app.js #This should start the server at port 3000 with redis as the backend store.
