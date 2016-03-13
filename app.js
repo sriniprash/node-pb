@@ -1,13 +1,16 @@
-var express = require('express');
-var morgan = require('morgan');
-var crypto = require('crypto');
-var fs = require('fs');
-var app = express();
+"use strict";
 
-var storeDirectory = "./store/";
+let express = require('express');
+let morgan = require('morgan');
+let store = require('./lib/fileStore');
+let app = express();
+const appConfig = require('./config');
+let storeObject = new store(appConfig);
 
+// Middleware for logging requests
 app.use(morgan('combined'));
 
+// Middleware to store reqest body to req.text
 app.use(function(req, res, next){
   if (req.is('text/*')) {
     req.text = '';
@@ -20,35 +23,32 @@ app.use(function(req, res, next){
 });
 
 app.get('/:id', function (req, res) {
-  var pasteID = req.params.id;
-  fs.readFile(storeDirectory + pasteID, 'utf8', function(err, data) {
-    if(err) {
-      res.status(500).send("Paste with ID: " + pasteID + " not found!");
-    }
-    else {
+  let pasteID = req.params.id;
+  let promise = storeObject.get(pasteID);
+
+  promise.then(
+    function(result) {
       res.append("Content-Type", "text/plain");
-      res.send(data); 
+      res.send(result); 
+    }, 
+    function(error) {
+      res.status(500).send(error);
     }
-  });
+  );
 });
 
 app.post('/', function (req, res) {
-  var paste = req.text;
-  var md5sum = crypto.createHash('md5').update(paste).digest("hex");
-  
-  if (!fs.existsSync(storeDirectory)){
-    console.log("Making directory: " + storeDirectory);
-    fs.mkdirSync(storeDirectory);
-  }
+  let paste = req.text;
+  let promise = storeObject.put(paste);
 
-  fs.writeFile(storeDirectory + md5sum, paste, function(err){
-    if(err) {
-      res.status(500).send(err);
+  promise.then(
+    function(result) {
+      res.send(result);
+    },
+    function(error) {
+      res.status(500).send(error);
     }
-    else {
-      res.send("Paste Created with ID: " + md5sum);
-    }
-  });
+  );
 });
 
 app.listen(3000, function () {
